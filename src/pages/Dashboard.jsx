@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [bills, setBills] = useState([]);
+  const [totalDue, setTotalDue] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,6 +38,10 @@ const Dashboard = () => {
       });
       const data = await response.json();
       setBills(data.bills);
+      const dueAmount = data.bills
+        .filter((bill) => bill.status === "PENDING")
+        .reduce((acc, bill) => acc + bill.amount, 0);
+      setTotalDue(dueAmount);
     } catch (error) {
       console.error("Error fetching bills:", error);
     }
@@ -46,20 +51,36 @@ const Dashboard = () => {
     <div className="p-8">
       <h2 className="text-3xl font-bold mb-4">Dashboard</h2>
       {user && <p>Welcome, {user.name}!</p>}
-      <h3 className="text-2xl font-semibold mt-4">Your Bills</h3>
-      <div className="bg-white p-4 rounded-lg shadow-md mt-2">
+
+      {/* Billing Summary */}
+      <div className="bg-white p-6 rounded-lg shadow-md mt-4">
+        <h3 className="text-xl font-semibold mb-2">Billing Summary</h3>
+        <p><strong>Total Due:</strong> ₹{totalDue}</p>
+        <p><strong>Last Payment:</strong> ₹{bills.length > 0 ? bills[bills.length - 1].amount : "N/A"}</p>
+      </div>
+
+      {/* Recent Transactions */}
+      <div className="bg-white p-6 rounded-lg shadow-md mt-4">
+        <h3 className="text-xl font-semibold mb-2">Recent Transactions</h3>
         {bills.length > 0 ? (
           <ul>
-            {bills.map((bill) => (
+            {bills.slice(-5).map((bill) => (
               <li key={bill.id} className="border-b p-2">
-                {bill.month}: ${bill.amount} - {bill.status}
+                {bill.month}: ₹{bill.amount} - {bill.status}
               </li>
             ))}
           </ul>
         ) : (
-          <p>No bills available.</p>
+          <p>No transactions available.</p>
         )}
       </div>
+
+      {/* Quick Pay Button */}
+      {totalDue > 0 && (
+        <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+          Pay Now
+        </button>
+      )}
     </div>
   );
 };
