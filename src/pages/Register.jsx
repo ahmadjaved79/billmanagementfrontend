@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import GoogleLoginButton from "../components/GoogleLoginButton";
+
 import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
@@ -33,6 +35,8 @@ const Register = () => {
     <div className="flex h-screen items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-bold text-center mb-4">Register</h2>
+
+        {/* ✅ Registration Form */}
         <form onSubmit={handleRegister}>
           <div className="mb-4">
             <label className="block text-gray-700">Full Name</label>
@@ -71,6 +75,19 @@ const Register = () => {
             Register
           </button>
         </form>
+
+        {/* ✅ Google Login Button */}
+        <div className="mt-4">
+          <GoogleLoginButton />
+        </div>
+
+        {/* ✅ Already have an account? Login */}
+        <div className="mt-4 text-center">
+          <p className="text-gray-600">Already have an account?</p>
+          <Link to="/login" className="text-blue-500 font-semibold hover:underline">
+            Login here
+          </Link>
+        </div>
       </div>
     </div>
   );

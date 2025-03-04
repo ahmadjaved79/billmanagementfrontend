@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import GoogleLoginButton from "../components/GoogleLoginButton";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -20,8 +21,9 @@ const Login = () => {
       if (data.success) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("username", data.username);
+        console.log("Data successfully received");
         toast.success("Login Successful!");
-        navigate("/");
+        navigate("/dashboard");
       } else {
         toast.error("Invalid credentials. Please try again.");
       }
@@ -31,9 +33,11 @@ const Login = () => {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-primary-100">
+    <div className="flex h-screen items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
+        
+        {/* ✅ Login Form */}
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label className="block text-gray-700">Email</label>
@@ -62,6 +66,19 @@ const Login = () => {
             Login
           </button>
         </form>
+
+        {/* ✅ Google Login Button */}
+        <div className="mt-4">
+          <GoogleLoginButton />
+        </div>
+
+        {/* ✅ Don't have an account? Sign Up */}
+        <div className="mt-4 text-center">
+          <p className="text-gray-600">Don't have an account?</p>
+          <Link to="/register" className="text-blue-500 font-semibold hover:underline">
+            Create an new account
+          </Link>
+        </div>
       </div>
     </div>
   );
